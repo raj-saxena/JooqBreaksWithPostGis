@@ -73,6 +73,14 @@ jooq{
             database {
                 name = 'org.jooq.meta.postgres.PostgresDatabase'
                 inputSchema = 'public'
+                forcedTypes {
+                    forcedType {
+                        userType = 'org.postgis.Point'
+                        converter = 'com.example.JooqBreaksWithPostGis.jooq.converters.PostgresPointJooqConverter'
+                        expression = '.*\\.point'
+                        types = '.*'
+                    }
+                }
             }
             generate {
                 routines = false
@@ -88,4 +96,11 @@ jooq{
             }
         }
     }
+}
+
+
+// Delete jooq generated code
+clean.doFirst {
+    printf "${rootDir}/src/main/java/generated/"
+    delete "${rootDir}/src/main/java/generated/"
 }
