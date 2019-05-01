@@ -3,10 +3,12 @@ plugins {
 	id 'org.jetbrains.kotlin.jvm' version '1.2.71'
 	id 'org.jetbrains.kotlin.plugin.spring' version '1.2.71'
 	id "org.flywaydb.flyway" version "5.2.4"
+    id 'nu.studer.jooq' version '3.0.3'
 }
 
 apply plugin: 'io.spring.dependency-management'
 apply plugin: "org.flywaydb.flyway"
+apply plugin: 'nu.studer.jooq'
 
 group = 'com.example'
 version = '0.0.1-SNAPSHOT'
@@ -25,6 +27,7 @@ dependencies {
 
 	// DB
 	runtime 'postgresql:postgresql:9.1-901-1.jdbc4'
+	jooqRuntime 'postgresql:postgresql:9.1-901-1.jdbc4'
 	implementation group: 'net.postgis', name: 'postgis-jdbc', version: '2.3.0'
 	implementation 'org.flywaydb:flyway-core'
 }
@@ -51,4 +54,38 @@ flyway {
 	url = db_url
 	user = db_user
 	password = db_password
+}
+
+jooq{
+    myAwesomeApp(sourceSets.main){
+        logging = 'WARN'
+        jdbc {
+            driver = 'org.postgresql.Driver'
+            url = db_url
+            user = db_user
+            password = db_password
+        }
+        generator {
+            name = 'org.jooq.codegen.DefaultGenerator'
+            strategy {
+                name = 'org.jooq.codegen.DefaultGeneratorStrategy'
+            }
+            database {
+                name = 'org.jooq.meta.postgres.PostgresDatabase'
+                inputSchema = 'public'
+            }
+            generate {
+                routines = false
+                relations = true
+                deprecated = false
+                records = true
+                immutablePojos = false
+                fluentSetters = true
+            }
+            target {
+                packageName = 'jooq.fancy.app'
+                directory = 'src/main/java/generated'
+            }
+        }
+    }
 }
