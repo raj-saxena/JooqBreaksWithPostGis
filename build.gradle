@@ -81,6 +81,14 @@ jooq{
                         types = '.*'
                     }
                 }
+                excludes = '.*ST_ValueCount' +
+                        '|.*St_Valuepercent' +
+                        '|.*St_Histogram' +
+                        '|.*St_Quantile' +
+                        '|.*St_Approxhistogram' +
+                        '|.*St_PixelOfValue' +
+                        '|.*St_Approxquantile' +
+                        '|.*ST_Tile'
             }
             generate {
                 routines = false
